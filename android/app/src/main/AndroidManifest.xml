@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
-        android:label="hostel_mess_bloc_version"
+        android:label="G.P.B. MessTrack"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
