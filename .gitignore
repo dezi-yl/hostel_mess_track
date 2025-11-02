@@ -11,10 +11,6 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-.gemini/
-.git/
-.idea/
-.vscode/
 
 # IntelliJ related
 *.iml
