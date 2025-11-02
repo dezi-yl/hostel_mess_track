@@ -32,7 +32,7 @@ jobs:
         run: flutter pub get
       
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --split-per-abi
       
       - name: Get version from pubspec.yaml
         id: version
@@ -45,7 +45,7 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.number }}
           name: Release v${{ steps.version.outputs.number }}
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/flutter-apk/*.apk
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
