@@ -2,6 +2,12 @@
 
 **Git Repository URL:** [https://github.com/dezi-yl/hostel_mess_track](https://github.com/dezi-yl/hostel_mess_track)
 
+## Abstract
+
+The Hostel Mess Track application is a comprehensive mobile solution, built with Flutter, designed to digitize and streamline the management of a hostel's dining services. It replaces traditional, error-prone manual record-keeping with an efficient, reliable, and user-friendly system. The application is architected following Clean Architecture principles, ensuring a modular, scalable, and maintainable codebase. It features robust functionalities for managing students and rooms, tracking daily meal attendance via manual entry or QR code scanning, and generating detailed monthly reports that can be exported to CSV format. State management is handled by the BLoC pattern, and data persistence is achieved through a local SQLite database.
+
+---
+
 ## 1. Introduction
 
 ### 1.1. Project Title
@@ -19,11 +25,17 @@ Managing a hostel mess involves keeping accurate records of students, their meal
 
 ---
 
-## 2. System Architecture: Clean Architecture
+## 2. Acknowledgement
+
+This project was a significant undertaking, and its completion would not have been possible without the support of several key individuals. I would like to extend my sincere gratitude to my mentors, whose guidance was invaluable in navigating the complexities of this project and refining its architecture. My appreciation also goes to my colleagues for the collaborative spirit, the insightful discussions, and the crucial 'second pair of eyes' during debugging sessions. This work is a product of perseverance, late-night coding sessions, and a shared commitment to building a high-quality application.
+
+---
+
+## 3. System Architecture: Clean Architecture
 
 This project is built upon the principles of **Clean Architecture**, a software design philosophy that separates the concerns of a program into distinct, independent layers. This approach enhances modularity, testability, and maintainability.
 
-### 2.1. The Principles of Clean Architecture
+### 3.1. The Principles of Clean Architecture
 The core idea of Clean Architecture is the **Dependency Rule**: *source code dependencies can only point inwards*. This means that inner layers (containing core business logic) should have no knowledge of outer layers (containing implementation details like UI or databases).
 
 This creates a system where:
@@ -31,7 +43,7 @@ This creates a system where:
 - The application is easier to test, as the business logic can be tested without the UI or database.
 - The UI or database can be changed with minimal impact on the rest of the system.
 
-### 2.2. Implementation in this Project
+### 3.2. Implementation in this Project
 The application is structured into three primary layers, reflecting the Clean Architecture pattern:
 
 #### a) Presentation Layer
@@ -56,13 +68,13 @@ This layer is responsible for retrieving data from and storing data to one or mo
 - **Location:** `lib/core/data/`
 - **How it works:** The `StudentRepositoryImpl` takes a `LocalDatabaseHelper` as a dependency. When a method like `getAllStudents` is called from a use case, the repository implementation calls the corresponding method on the database helper, retrieves the raw data (as `Map<String, dynamic>`), and maps it to the `StudentEntity` objects that the Domain layer understands.
 
-### 2.3. Dependency Injection with `get_it`
+### 3.3. Dependency Injection with `get_it`
 To connect these layers without violating the Dependency Rule, the project uses the `get_it` package for dependency injection. The setup is in `lib/core/di/dependency_injection.dart`.
 This setup allows the Presentation layer to get an instance of a `StudentOperationsUseCases` without knowing how it's created or what its dependencies are.
 
 ---
 
-## 3. State Management: BLoC Pattern
+## 4. State Management: BLoC Pattern
 
 The **BLoC (Business Logic Component)** pattern is used for state management. It helps to separate the UI from the business logic, making the app more predictable and testable.
 
@@ -73,11 +85,11 @@ A BLoC consists of three main components:
 
 ---
 
-## 4. Database Schema and Data Persistence
+## 5. Database Schema and Data Persistence
 
 The application uses a local **SQLite** database for data persistence, managed via the `sqflite` package.
 
-### 4.1. Database Schema
+### 5.1. Database Schema
 The database schema is defined in `lib/core/data/datasources/local/sqlite_database_helper.dart`. It consists of four tables:
 
 1.  **`room`**
@@ -97,12 +109,12 @@ The database schema is defined in `lib/core/data/datasources/local/sqlite_databa
     - `food_id`: INTEGER (FOREIGN KEY to `food.id`)
     - `date`: INTEGER (stores `DateTime.millisecondsSinceEpoch`)
 
-### 4.2. Data Access
+### 5.2. Data Access
 The `SQLiteLocalDatabaseHelper` class contains all the SQL queries required to perform CRUD (Create, Read, Update, Delete) operations on these tables. It handles the database connection, table creation, and data manipulation.
 
 ---
 
-## 5. Detailed Feature Implementation
+## 6. Detailed Feature Implementation
 
 The app is navigated via a `BottomNavigationBar` defined in `nav_bar_screen.dart`, providing access to five main features:
 
@@ -114,13 +126,13 @@ The app is navigated via a `BottomNavigationBar` defined in `nav_bar_screen.dart
 
 ---
 
-## 6. Error Handling
+## 7. Error Handling
 
 The application provides user feedback for operations that result in an error. For instance, since the name of each food item must be unique, attempting to add a food item that already exists will result in a `DatabaseException`. This exception is caught within the `FoodAttendanceBloc`, which then emits a new state containing a user-friendly error message: "Food item with this name already exists.". The UI, which is listening for state changes, detects this error message and displays it to the user in a temporary message at the bottom of the screen (a Snackbar), preventing the app from crashing and clearly informing the user of the issue.
 
 ---
 
-## 7. Dependencies
+## 8. Dependencies
 
 - **`flutter_bloc`:** Core state management library.
 - **`get_it`:** Service locator for dependency injection.
@@ -133,15 +145,17 @@ The application provides user feedback for operations that result in an error. F
 
 ---
 
-## 8. Conclusion & Future Scope
+## 9. Conclusion & Future Scope
 
-### 8.1. Summary
+### 9.1. Summary
 This project successfully implements a functional and well-architected mobile application for hostel mess management. The use of Clean Architecture and the BLoC pattern provides a solid foundation that is scalable, maintainable, and testable. The application addresses the core requirements of student management, attendance tracking, and reporting, providing a significant improvement over manual systems.
 
-### 8.2. Future Enhancements
+### 9.2. Future Enhancements
 - **User Authentication:** Implement a login system to restrict access to authorized administrators.
 - **Cloud Sync:** Integrate a backend service (like Firebase Firestore) to sync data across multiple devices and provide real-time updates.
 - **Billing Module:** Automatically calculate monthly mess bills for each student based on their attendance records.
 - **Inventory Management:** Add a feature to track mess inventory and generate alerts for low-stock items.
 - **Enhanced Reporting:** Provide more advanced filtering and data visualization options for reports.
 - **Student Profile Pictures:** Extend the `student` table to include a path to a profile picture and display it in the UI.
+
+
