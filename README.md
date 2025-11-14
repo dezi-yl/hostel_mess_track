@@ -145,6 +145,50 @@ The application provides user feedback for operations that result in an error. F
 
 ---
 
+## 10. Screenshots
+
+### Manage Students with Ease
+<img src="https://via.placeholder.com/300x600.png?text=Students+Page" alt="Students Page" width="250"/>
+
+Quickly add, view, and manage all student details in one place. Filter students by year group, update their room assignments, and perform bulk operations with an intuitive selection mode. The clean interface ensures that managing student data is a seamless experience.
+
+---
+
+### Organize Rooms and Occupancy
+<img src="https://via.placeholder.com/300x600.png?text=Rooms+Page" alt="Rooms Page" width="250"/>
+
+Keep track of all hostel rooms and the number of students in each. Add new rooms as your hostel expands and view a detailed list of occupants for any given room. The long-press selection mode makes it easy to delete multiple rooms at once.
+
+---
+
+### Track Daily Food Attendance
+<img src="https://via.placeholder.com/300x600.png?text=Food+%26+Attendance" alt="Food & Attendance" width="250"/>
+
+The heart of the mess management system. View daily food items, see at-a-glance attendance counts, and record which students have eaten. Attendance can be taken manually through a quick search or instantly by scanning a student's QR code.
+
+---
+
+### Generate Insightful Reports
+<img src="https://via.placeholder.com/300x600.png?text=Reports+Page" alt="Reports Page" width="250"/>
+
+Generate detailed monthly attendance reports with just a few taps. The data is presented in a clear, tabular format, and can be exported to a CSV file for billing, analysis, or record-keeping.
+
+---
+
+### Instant QR Code Scanning
+<img src="https://via.placeholder.com/300x600.png?text=QR+Scanner" alt="QR Scanner" width="250"/>
+
+Speed up the attendance process with our integrated QR code scanner. Simply point the camera at a student's QR code, and their meal is instantly recorded, eliminating queues and manual errors.
+
+---
+
+### In-App Debugging
+<img src="https://via.placeholder.com/300x600.png?text=Debug+Page" alt="Debug Page" width="250"/>
+
+A powerful utility for developers and administrators. The debug page provides a raw, real-time view of the data in all database tables, making it invaluable for troubleshooting and ensuring data integrity.
+
+---
+
 ## 9. Conclusion & Future Scope
 
 ### 9.1. Summary

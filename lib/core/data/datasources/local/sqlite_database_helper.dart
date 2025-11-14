@@ -17,6 +17,9 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
       return await openDatabase(
         path,
         version: 3,
+        onConfigure: (db) async {
+          await db.execute('PRAGMA foreign_keys = ON');
+        },
         onCreate: (db, version) async {
           await db.execute('''
           CREATE TABLE room (

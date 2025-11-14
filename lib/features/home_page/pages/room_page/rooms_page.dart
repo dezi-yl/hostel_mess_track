@@ -160,10 +160,24 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     if (state is RoomLoaded) {
       final currentState = state as RoomLoaded;
       try {
+        emit(RoomLoading());
         for (final roomId in currentState.selectedRoomIds) {
           await _studentOperationsUseCases.deleteRoom(roomId);
         }
-        add(LoadRooms());
+        final rooms = await _studentOperationsUseCases.getAllRooms();
+        final students = await _studentOperationsUseCases.getAllStudents();
+        final roomStudentCounts = <RoomEntity, int>{};
+        for (final room in rooms) {
+          final count = students.where((s) => s.roomId == room.id).length;
+          roomStudentCounts[room] = count;
+        }
+        emit(
+          RoomLoaded(
+            roomStudentCounts,
+            isSelectionMode: false,
+            selectedRoomIds: [],
+          ),
+        );
       } catch (e) {
         emit(RoomError(e.toString()));
       }
