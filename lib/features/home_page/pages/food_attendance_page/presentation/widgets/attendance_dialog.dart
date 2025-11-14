@@ -85,8 +85,8 @@ class _AttendanceDialogState extends State<AttendanceDialog>
       return; // Check if the widget is still mounted before using context
     }
     context.read<FoodAttendanceBloc>().add(
-          ScanAndMarkAttendance(qrCode: code, foodId: widget.foodId),
-        );
+      ScanAndMarkAttendance(qrCode: code, foodId: widget.foodId),
+    );
 
     // Resume scanning after a delay
     Future.delayed(const Duration(seconds: 2), () {
@@ -110,17 +110,25 @@ class _AttendanceDialogState extends State<AttendanceDialog>
         if (state.successfullyAttendedStudent != null) {
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted) {
-              context.read<FoodAttendanceBloc>().add(ClearSuccessfullyAttendedStudent());
+              context.read<FoodAttendanceBloc>().add(
+                ClearSuccessfullyAttendedStudent(),
+              );
             }
           });
         }
         if (state.errorMessage != null) {
-          SnackbarService.showSnackbar(context, state.errorMessage!, isError: true);
+          SnackbarService.showSnackbar(
+            context,
+            state.errorMessage!,
+            isError: true,
+          );
         }
       },
       builder: (context, state) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: SizedBox(
             width: 500,
             height: screenHeight * 0.7, // 70% of screen height
@@ -205,8 +213,8 @@ class _AttendanceDialogState extends State<AttendanceDialog>
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () => context.read<FoodAttendanceBloc>().add(
-                          SearchStudent(query: _regController.text),
-                        ),
+                      SearchStudent(query: _regController.text),
+                    ),
                   ),
                 ),
                 onSubmitted: (value) => context.read<FoodAttendanceBloc>().add(
@@ -227,11 +235,11 @@ class _AttendanceDialogState extends State<AttendanceDialog>
                         subtitle: Text(student.reg),
                         onTap: () {
                           context.read<FoodAttendanceBloc>().add(
-                                MarkAttendance(
-                                  studentId: student.id,
-                                  foodId: widget.foodId,
-                                ),
-                              );
+                            MarkAttendance(
+                              studentId: student.id,
+                              foodId: widget.foodId,
+                            ),
+                          );
                           context.read<FoodAttendanceBloc>().add(ClearSearch());
                         },
                       );

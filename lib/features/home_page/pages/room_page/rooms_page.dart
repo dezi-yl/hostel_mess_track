@@ -43,9 +43,17 @@ class RoomLoaded extends RoomState {
   final bool isSelectionMode;
   final List<int> selectedRoomIds;
 
-  RoomLoaded(this.roomStudentCounts, {this.isSelectionMode = false, this.selectedRoomIds = const []});
+  RoomLoaded(
+    this.roomStudentCounts, {
+    this.isSelectionMode = false,
+    this.selectedRoomIds = const [],
+  });
 
-  RoomLoaded copyWith({Map<RoomEntity, int>? roomStudentCounts, bool? isSelectionMode, List<int>? selectedRoomIds}) {
+  RoomLoaded copyWith({
+    Map<RoomEntity, int>? roomStudentCounts,
+    bool? isSelectionMode,
+    List<int>? selectedRoomIds,
+  }) {
     return RoomLoaded(
       roomStudentCounts ?? this.roomStudentCounts,
       isSelectionMode: isSelectionMode ?? this.isSelectionMode,
@@ -107,14 +115,25 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     }
   }
 
-  void _onToggleSelectionMode(ToggleSelectionMode event, Emitter<RoomState> emit) {
+  void _onToggleSelectionMode(
+    ToggleSelectionMode event,
+    Emitter<RoomState> emit,
+  ) {
     if (state is RoomLoaded) {
       final currentState = state as RoomLoaded;
-      emit(currentState.copyWith(isSelectionMode: !currentState.isSelectionMode, selectedRoomIds: []));
+      emit(
+        currentState.copyWith(
+          isSelectionMode: !currentState.isSelectionMode,
+          selectedRoomIds: [],
+        ),
+      );
     }
   }
 
-  void _onToggleRoomSelection(ToggleRoomSelection event, Emitter<RoomState> emit) {
+  void _onToggleRoomSelection(
+    ToggleRoomSelection event,
+    Emitter<RoomState> emit,
+  ) {
     if (state is RoomLoaded) {
       final currentState = state as RoomLoaded;
       final selectedIds = List<int>.from(currentState.selectedRoomIds);
@@ -125,14 +144,19 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       }
 
       if (selectedIds.isEmpty) {
-        emit(currentState.copyWith(isSelectionMode: false, selectedRoomIds: []));
+        emit(
+          currentState.copyWith(isSelectionMode: false, selectedRoomIds: []),
+        );
       } else {
         emit(currentState.copyWith(selectedRoomIds: selectedIds));
       }
     }
   }
 
-  Future<void> _onDeleteSelectedRooms(DeleteSelectedRooms event, Emitter<RoomState> emit) async {
+  Future<void> _onDeleteSelectedRooms(
+    DeleteSelectedRooms event,
+    Emitter<RoomState> emit,
+  ) async {
     if (state is RoomLoaded) {
       final currentState = state as RoomLoaded;
       try {
@@ -156,7 +180,9 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   void _onSelectAllRooms(SelectAllRooms event, Emitter<RoomState> emit) {
     if (state is RoomLoaded) {
       final currentState = state as RoomLoaded;
-      final allRoomIds = currentState.roomStudentCounts.keys.map((r) => r.id).toList();
+      final allRoomIds = currentState.roomStudentCounts.keys
+          .map((r) => r.id)
+          .toList();
       if (currentState.selectedRoomIds.length == allRoomIds.length) {
         emit(currentState.copyWith(selectedRoomIds: []));
       } else {
@@ -198,11 +224,15 @@ class RoomsPage extends StatelessWidget {
               builder: (context, state) {
                 // 🟢 Selection mode
                 if (state is RoomLoaded && state.isSelectionMode) {
-                  final allSelected = state.selectedRoomIds.length == state.roomStudentCounts.length;
+                  final allSelected =
+                      state.selectedRoomIds.length ==
+                      state.roomStudentCounts.length;
                   return Row(
                     children: [
                       IconButton(
-                        icon: Icon(allSelected ? Icons.deselect : Icons.select_all),
+                        icon: Icon(
+                          allSelected ? Icons.deselect : Icons.select_all,
+                        ),
                         tooltip: allSelected ? 'Deselect All' : 'Select All',
                         onPressed: () {
                           context.read<RoomBloc>().add(SelectAllRooms());
@@ -214,7 +244,9 @@ class RoomsPage extends StatelessWidget {
                         onPressed: state.selectedRoomIds.isEmpty
                             ? null
                             : () {
-                                context.read<RoomBloc>().add(DeleteSelectedRooms());
+                                context.read<RoomBloc>().add(
+                                  DeleteSelectedRooms(),
+                                );
                               },
                       ),
                     ],
@@ -225,7 +257,11 @@ class RoomsPage extends StatelessWidget {
                 if (state is RoomLoaded) {
                   return Row(
                     children: [
-                      IconButton(icon: const Icon(Icons.add), tooltip: 'Add Room', onPressed: () => _showAddRoomDialog(context)),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        tooltip: 'Add Room',
+                        onPressed: () => _showAddRoomDialog(context),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.refresh),
                         tooltip: 'Refresh',
@@ -245,7 +281,11 @@ class RoomsPage extends StatelessWidget {
         body: BlocConsumer<RoomBloc, RoomState>(
           listener: (context, state) {
             if (state is RoomError) {
-              SnackbarService.showSnackbar(context, state.message, isError: true);
+              SnackbarService.showSnackbar(
+                context,
+                state.message,
+                isError: true,
+              );
             }
           },
           builder: (context, state) {
@@ -257,9 +297,9 @@ class RoomsPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.error_outline,
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.error,
                       size: 60,
                     ),
                     const SizedBox(height: 16),
@@ -274,8 +314,8 @@ class RoomsPage extends StatelessWidget {
                         state.message,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -286,7 +326,10 @@ class RoomsPage extends StatelessWidget {
                       icon: const Icon(Icons.refresh),
                       label: const Text('Retry'),
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -304,29 +347,50 @@ class RoomsPage extends StatelessWidget {
                   final studentCount = state.roomStudentCounts[room];
                   final isSelected = state.selectedRoomIds.contains(room.id);
                   return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    color: isSelected ? Colors.blue.withOpacity(0.2) : null,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primaryContainer
+                        : null,
                     child: ListTile(
                       leading: state.isSelectionMode
                           ? Checkbox(
                               value: isSelected,
                               onChanged: (value) {
-                                context.read<RoomBloc>().add(ToggleRoomSelection(room.id));
+                                context.read<RoomBloc>().add(
+                                  ToggleRoomSelection(room.id),
+                                );
                               },
                             )
-                          : const Icon(Icons.meeting_room_outlined),
-                      title: Text(room.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          : Icon(
+                              Icons.meeting_room_outlined,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      title: Text(
+                        room.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Text('Students: $studentCount'),
                       onTap: () {
                         if (state.isSelectionMode) {
-                          context.read<RoomBloc>().add(ToggleRoomSelection(room.id));
+                          context.read<RoomBloc>().add(
+                            ToggleRoomSelection(room.id),
+                          );
                         } else {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => RoomDetailsPage(room: room)));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => RoomDetailsPage(room: room),
+                            ),
+                          );
                         }
                       },
                       onLongPress: () {
                         context.read<RoomBloc>().add(ToggleSelectionMode());
-                        context.read<RoomBloc>().add(ToggleRoomSelection(room.id));
+                        context.read<RoomBloc>().add(
+                          ToggleRoomSelection(room.id),
+                        );
                       },
                     ),
                   );
@@ -353,12 +417,18 @@ class RoomsPage extends StatelessWidget {
           builder: (context, error, child) {
             return TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: 'Room Name', errorText: error),
+              decoration: InputDecoration(
+                labelText: 'Room Name',
+                errorText: error,
+              ),
             );
           },
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               final roomName = nameController.text.toUpperCase();

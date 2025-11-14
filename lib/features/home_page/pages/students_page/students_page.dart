@@ -1,3 +1,4 @@
+import 'package:hostel_mess_2/core/utils/snackbar_service.dart';
 import 'package:flutter/services.dart';
 // lib/features/home_page/pages/students_page/students_page.dart
 import 'package:flutter/material.dart';
@@ -40,19 +41,29 @@ class StudentsPage extends StatelessWidget {
             BlocBuilder<StudentBloc, StudentState>(
               builder: (context, state) {
                 if (state is StudentLoaded && state.isSelectionMode) {
-                  final allSelected = state.selectedStudentIds.length == state.filteredStudents.length;
+                  final allSelected =
+                      state.selectedStudentIds.length ==
+                      state.filteredStudents.length;
                   return Row(
                     children: [
                       TextButton(
                         onPressed: () {
-                          context.read<StudentBloc>().add(const SelectAllStudentsEvent());
+                          context.read<StudentBloc>().add(
+                            const SelectAllStudentsEvent(),
+                          );
                         },
-                        child: Text(allSelected ? 'Deselect All' : 'Select All'),
+                        child: Text(
+                          allSelected ? 'Deselect All' : 'Select All',
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {
-                          context.read<StudentBloc>().add(DeleteSelectedStudentsEvent(state.selectedStudentIds));
+                          context.read<StudentBloc>().add(
+                            DeleteSelectedStudentsEvent(
+                              state.selectedStudentIds,
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -71,7 +82,9 @@ class StudentsPage extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.refresh),
                         onPressed: () {
-                          context.read<StudentBloc>().add(const LoadStudentsEvent());
+                          context.read<StudentBloc>().add(
+                            const LoadStudentsEvent(),
+                          );
                         },
                       ),
                     ],
@@ -86,7 +99,11 @@ class StudentsPage extends StatelessWidget {
         body: BlocConsumer<StudentBloc, StudentState>(
           listener: (context, state) {
             if (state is StudentError) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
+              SnackbarService.showSnackbar(
+                context,
+                state.message,
+                isError: true,
+              );
             }
           },
           builder: (context, state) {
@@ -96,9 +113,14 @@ class StudentsPage extends StatelessWidget {
             if (state is StudentLoaded) {
               return Column(
                 children: [
-                  if (state.yearGroups.isNotEmpty) _buildYearGroupsSection(context, state),
+                  if (state.yearGroups.isNotEmpty)
+                    _buildYearGroupsSection(context, state),
                   _buildStudentsHeader(context, state),
-                  Expanded(child: state.filteredStudents.isEmpty ? _buildEmptyState(context) : _buildStudentsList(context, state)),
+                  Expanded(
+                    child: state.filteredStudents.isEmpty
+                        ? _buildEmptyState(context)
+                        : _buildStudentsList(context, state),
+                  ),
                 ],
               );
             }
@@ -111,7 +133,9 @@ class StudentsPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<StudentBloc>().add(const LoadStudentsEvent());
+                        context.read<StudentBloc>().add(
+                          const LoadStudentsEvent(),
+                        );
                       },
                       child: const Text('Retry'),
                     ),
@@ -134,7 +158,10 @@ class StudentsPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text('Year Groups', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const Text(
+                'Year Groups',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
               const Spacer(),
               if (state.yearFilter != null)
                 TextButton(
@@ -162,9 +189,13 @@ class StudentsPage extends StatelessWidget {
                     selected: isSelected,
                     onSelected: (selected) {
                       if (isSelected) {
-                        context.read<StudentBloc>().add(const ClearFilterEvent());
+                        context.read<StudentBloc>().add(
+                          const ClearFilterEvent(),
+                        );
                       } else {
-                        context.read<StudentBloc>().add(FilterByYearGroupEvent(year));
+                        context.read<StudentBloc>().add(
+                          FilterByYearGroupEvent(year),
+                        );
                       }
                     },
                   ),
@@ -203,31 +234,53 @@ class StudentsPage extends StatelessWidget {
       itemCount: state.filteredStudents.length,
       itemBuilder: (context, index) {
         final student = state.filteredStudents[index];
-        final room = state.rooms.firstWhere((r) => r.id == student.roomId, orElse: () => RoomEntity(id: 0, name: 'No Room'));
+        final room = state.rooms.firstWhere(
+          (r) => r.id == student.roomId,
+          orElse: () => RoomEntity(id: 0, name: 'No Room'),
+        );
         final isSelected = state.selectedStudentIds.contains(student.id);
 
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
-          color: isSelected ? Colors.blue.withOpacity(0.2) : null,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primaryContainer
+              : null,
           child: ListTile(
             leading: state.isSelectionMode
                 ? Checkbox(
                     value: isSelected,
                     onChanged: (value) {
-                      context.read<StudentBloc>().add(ToggleStudentSelectionEvent(student.id));
+                      context.read<StudentBloc>().add(
+                        ToggleStudentSelectionEvent(student.id),
+                      );
                     },
                   )
-                : CircleAvatar(child: Text(student.name.substring(0, 1))),
-            title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                : CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      student.name.substring(0, 1),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+            title: Text(
+              student.name,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
             subtitle: Text('Reg: ${student.reg}\nRoom: ${room.name}'),
             onTap: () {
               if (state.isSelectionMode) {
-                context.read<StudentBloc>().add(ToggleStudentSelectionEvent(student.id));
+                context.read<StudentBloc>().add(
+                  ToggleStudentSelectionEvent(student.id),
+                );
               }
             },
             onLongPress: () {
               context.read<StudentBloc>().add(const ToggleSelectionModeEvent());
-              context.read<StudentBloc>().add(ToggleStudentSelectionEvent(student.id));
+              context.read<StudentBloc>().add(
+                ToggleStudentSelectionEvent(student.id),
+              );
             },
             trailing: PopupMenuButton<String>(
               onSelected: (value) {
@@ -235,7 +288,12 @@ class StudentsPage extends StatelessWidget {
                   _showUpdateRoomDialog(context, student, state.rooms);
                 }
               },
-              itemBuilder: (context) => [const PopupMenuItem(value: 'update_room', child: Text('Update Room'))],
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'update_room',
+                  child: Text('Update Room'),
+                ),
+              ],
             ),
           ),
         );
@@ -243,8 +301,14 @@ class StudentsPage extends StatelessWidget {
     );
   }
 
-  void _showUpdateRoomDialog(BuildContext context, StudentEntity student, List<RoomEntity> rooms) {
-    RoomEntity? selectedRoom = rooms.firstWhereOrNull((r) => r.id == student.roomId);
+  void _showUpdateRoomDialog(
+    BuildContext context,
+    StudentEntity student,
+    List<RoomEntity> rooms,
+  ) {
+    RoomEntity? selectedRoom = rooms.firstWhereOrNull(
+      (r) => r.id == student.roomId,
+    );
 
     showDialog(
       context: context,
@@ -252,15 +316,27 @@ class StudentsPage extends StatelessWidget {
         title: Text('Update Room for ${student.name}'),
         content: DropdownButtonFormField<RoomEntity>(
           value: selectedRoom,
-          items: rooms.map((room) => DropdownMenuItem(value: room, child: Text(room.name))).toList(),
+          items: rooms
+              .map(
+                (room) => DropdownMenuItem(value: room, child: Text(room.name)),
+              )
+              .toList(),
           onChanged: (room) => selectedRoom = room,
           decoration: const InputDecoration(labelText: 'Room'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
-              context.read<StudentBloc>().add(UpdateStudentRoomEvent(studentId: student.id, roomId: selectedRoom?.id));
+              context.read<StudentBloc>().add(
+                UpdateStudentRoomEvent(
+                  studentId: student.id,
+                  roomId: selectedRoom?.id,
+                ),
+              );
               context.read<RoomBloc>().add(LoadRooms());
               Navigator.of(dialogContext).pop();
             },
@@ -309,7 +385,10 @@ class StudentsPage extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           error,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
                           softWrap: true,
                           maxLines: 3,
                           overflow: TextOverflow.visible,
@@ -339,7 +418,12 @@ class StudentsPage extends StatelessWidget {
                               labelText: 'Registration Number',
                               counterText: '',
                               suffixText: '$length/10',
-                              suffixStyle: TextStyle(color: length > 10 ? Colors.red : Colors.grey.shade600, fontSize: 12),
+                              suffixStyle: TextStyle(
+                                color: length > 10
+                                    ? Theme.of(context).colorScheme.error
+                                    : Theme.of(context).hintColor,
+                                fontSize: 12,
+                              ),
                             ),
                           );
                         },
@@ -348,7 +432,10 @@ class StudentsPage extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           error,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
                           softWrap: true,
                           maxLines: 3,
                           overflow: TextOverflow.visible,
@@ -363,7 +450,12 @@ class StudentsPage extends StatelessWidget {
               // Room (Optional)
               DropdownButtonFormField<RoomEntity>(
                 value: selectedRoom,
-                items: state.rooms.map((room) => DropdownMenuItem(value: room, child: Text(room.name))).toList(),
+                items: state.rooms
+                    .map(
+                      (room) =>
+                          DropdownMenuItem(value: room, child: Text(room.name)),
+                    )
+                    .toList(),
                 onChanged: (room) => selectedRoom = room,
                 decoration: const InputDecoration(labelText: 'Room (Optional)'),
               ),
@@ -371,7 +463,10 @@ class StudentsPage extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               final name = nameController.text.trim();
@@ -386,7 +481,8 @@ class StudentsPage extends StatelessWidget {
                 nameErrorNotifier.value = 'Name cannot be empty';
                 hasError = true;
               } else if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(name)) {
-                nameErrorNotifier.value = 'Name must contain only letters and spaces (e.g., Ravi Raj).';
+                nameErrorNotifier.value =
+                    'Name must contain only letters and spaces (e.g., Ravi Raj).';
                 hasError = true;
               }
 
@@ -394,14 +490,17 @@ class StudentsPage extends StatelessWidget {
                 regErrorNotifier.value = 'Registration number cannot be empty';
                 hasError = true;
               } else if (!RegExp(r'^\d{10}$').hasMatch(reg)) {
-                regErrorNotifier.value = 'Please enter a valid 10-digit registration number.';
+                regErrorNotifier.value =
+                    'Please enter a valid 10-digit registration number.';
                 hasError = true;
               }
 
               if (hasError) return;
 
               // Add Student
-              context.read<StudentBloc>().add(AddStudentEvent(name: name, reg: reg, roomId: selectedRoom?.id));
+              context.read<StudentBloc>().add(
+                AddStudentEvent(name: name, reg: reg, roomId: selectedRoom?.id),
+              );
 
               if (selectedRoom?.id != null) {
                 context.read<RoomBloc>().add(LoadRooms());

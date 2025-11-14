@@ -27,14 +27,24 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
       appBar: AppBar(
         title: const Text('Food & Attendance'),
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: () => _showAddFoodDialog(context)),
-          IconButton(icon: const Icon(Icons.calendar_today), onPressed: () => _selectDate(context)),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _showAddFoodDialog(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () => _selectDate(context),
+          ),
         ],
       ),
       body: BlocConsumer<FoodAttendanceBloc, FoodAttendanceState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
-            SnackbarService.showSnackbar(context, state.errorMessage!, isError: true);
+            SnackbarService.showSnackbar(
+              context,
+              state.errorMessage!,
+              isError: true,
+            );
           }
           if (state.successMessage != null) {
             SnackbarService.showSnackbar(context, state.successMessage!);
@@ -55,13 +65,19 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
                     Flexible(
                       child: Text(
                         DateFormat('EEEE, d MMMM').format(state.selectedDate),
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Flexible(
                       child: Text(
                         'Total Eaten: ${state.totalUniqueStudents}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -70,7 +86,10 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
               if (state.foods.isEmpty)
                 Expanded(
                   child: Center(
-                    child: Text('No foods added yet.', style: TextStyle(color: Colors.grey.shade600)),
+                    child: Text(
+                      'No foods added yet.',
+                      style: TextStyle(color: Theme.of(context).hintColor),
+                    ),
                   ),
                 )
               else
@@ -85,19 +104,36 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.orange.shade100,
-                            child: const Icon(Icons.restaurant, color: Colors.deepOrange),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          title: Text(food.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                          leading: CircleAvatar(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
+                            child: Icon(
+                              Icons.restaurant,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          title: Text(
+                            food.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                           subtitle: Text('Attendance: $count'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => StudentListPage(foodId: food.id, foodName: food.name, date: state.selectedDate),
+                                builder: (_) => StudentListPage(
+                                  foodId: food.id,
+                                  foodName: food.name,
+                                  date: state.selectedDate,
+                                ),
                               ),
                             );
                           },
@@ -105,21 +141,36 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
                             icon: const Icon(Icons.more_vert),
                             onSelected: (value) {
                               if (value == 'take_attendance') {
-                                _showAttendanceDialog(context, food.id, food.name);
+                                _showAttendanceDialog(
+                                  context,
+                                  food.id,
+                                  food.name,
+                                );
                               } else if (value == 'delete') {
-                                _showDeleteConfirmation(context, food.id, food.name);
+                                _showDeleteConfirmation(
+                                  context,
+                                  food.id,
+                                  food.name,
+                                );
                               }
                             },
                             itemBuilder: (context) {
                               final now = DateTime.now();
-                              final isToday = state.selectedDate.year == now.year &&
+                              final isToday =
+                                  state.selectedDate.year == now.year &&
                                   state.selectedDate.month == now.month &&
                                   state.selectedDate.day == now.day;
 
                               return [
                                 if (isToday)
-                                  const PopupMenuItem(value: 'take_attendance', child: Text('Take Attendance')),
-                                const PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                  const PopupMenuItem(
+                                    value: 'take_attendance',
+                                    child: Text('Take Attendance'),
+                                  ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
                               ];
                             },
                           ),
@@ -160,20 +211,29 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, int foodId, String foodName) {
+  void _showDeleteConfirmation(
+    BuildContext context,
+    int foodId,
+    String foodName,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Food'),
         content: Text('Are you sure you want to delete "$foodName"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               context.read<FoodAttendanceBloc>().add(DeleteFood(foodId));
               Navigator.pop(dialogContext);
             },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: const Text('Delete'),
           ),
         ],
@@ -181,7 +241,11 @@ class _FoodAttendancePageState extends State<FoodAttendancePage> {
     );
   }
 
-  void _showAttendanceDialog(BuildContext context, int foodId, String foodName) {
+  void _showAttendanceDialog(
+    BuildContext context,
+    int foodId,
+    String foodName,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: false,

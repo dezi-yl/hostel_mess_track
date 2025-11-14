@@ -55,13 +55,20 @@ class FoodAttendanceState {
       attendanceCounts: attendanceCounts ?? this.attendanceCounts,
       selectedDate: selectedDate ?? this.selectedDate,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      successMessage: clearSuccess ? null : successMessage ?? this.successMessage,
+      successMessage: clearSuccess
+          ? null
+          : successMessage ?? this.successMessage,
       searchedStudents: searchedStudents ?? this.searchedStudents,
       isSearching: isSearching ?? this.isSearching,
       studentsForFood: studentsForFood ?? this.studentsForFood,
       totalUniqueStudents: totalUniqueStudents ?? this.totalUniqueStudents,
-      successfullyAttendedStudent: clearSuccessfullyAttendedStudent ? null : successfullyAttendedStudent ?? this.successfullyAttendedStudent,
-      successfullyAttendedStudentRoom: clearSuccessfullyAttendedStudent ? null : successfullyAttendedStudentRoom ?? this.successfullyAttendedStudentRoom,
+      successfullyAttendedStudent: clearSuccessfullyAttendedStudent
+          ? null
+          : successfullyAttendedStudent ?? this.successfullyAttendedStudent,
+      successfullyAttendedStudentRoom: clearSuccessfullyAttendedStudent
+          ? null
+          : successfullyAttendedStudentRoom ??
+                this.successfullyAttendedStudentRoom,
     );
   }
 }

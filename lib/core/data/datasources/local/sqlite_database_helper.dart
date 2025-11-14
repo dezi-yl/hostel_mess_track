@@ -16,7 +16,7 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
       String path = join(await getDatabasesPath(), 'hostel_mess.db');
       return await openDatabase(
         path,
-        version: 3, 
+        version: 3,
         onCreate: (db, version) async {
           await db.execute('''
           CREATE TABLE room (
@@ -241,13 +241,25 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
     try {
       final db = await database;
       final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+      final endOfDay = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        23,
+        59,
+        59,
+        999,
+      );
       final result = await db.rawQuery(
         '''
         SELECT food_id FROM student_food
         WHERE student_id = ? AND date >= ? AND date <= ?
       ''',
-        [studentId, startOfDay.millisecondsSinceEpoch, endOfDay.millisecondsSinceEpoch],
+        [
+          studentId,
+          startOfDay.millisecondsSinceEpoch,
+          endOfDay.millisecondsSinceEpoch,
+        ],
       );
 
       return result.map((row) => row['food_id'] as int).toList();
@@ -263,7 +275,15 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
     try {
       final db = await database;
       final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+      final endOfDay = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        23,
+        59,
+        59,
+        999,
+      );
       return await db.rawQuery(
         '''
         SELECT DISTINCT student.id, student.name
@@ -285,7 +305,15 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
     try {
       final db = await database;
       final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+      final endOfDay = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        23,
+        59,
+        59,
+        999,
+      );
       return await db.rawQuery(
         '''
         SELECT id, student_id, food_id, date
@@ -307,7 +335,15 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
     try {
       final db = await database;
       final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+      final endOfDay = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        23,
+        59,
+        59,
+        999,
+      );
       return await db.rawQuery(
         '''
         SELECT s.*
@@ -315,7 +351,11 @@ class SQLiteLocalDatabaseHelper implements LocalDatabaseHelper {
         INNER JOIN student_food sf ON s.id = sf.student_id
         WHERE sf.food_id = ? AND sf.date >= ? AND sf.date <= ?
       ''',
-        [foodId, startOfDay.millisecondsSinceEpoch, endOfDay.millisecondsSinceEpoch],
+        [
+          foodId,
+          startOfDay.millisecondsSinceEpoch,
+          endOfDay.millisecondsSinceEpoch,
+        ],
       );
     } catch (e) {
       throw Exception("getStudentsForFoodOnDate failed: $e");

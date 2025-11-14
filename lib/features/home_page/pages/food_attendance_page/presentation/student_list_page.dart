@@ -8,7 +8,12 @@ class StudentListPage extends StatefulWidget {
   final String foodName;
   final DateTime date;
 
-  const StudentListPage({super.key, required this.foodId, required this.foodName, required this.date});
+  const StudentListPage({
+    super.key,
+    required this.foodId,
+    required this.foodName,
+    required this.date,
+  });
 
   @override
   StudentListPageState createState() => StudentListPageState();
@@ -18,7 +23,9 @@ class StudentListPageState extends State<StudentListPage> {
   @override
   void initState() {
     super.initState();
-    context.read<FoodAttendanceBloc>().add(LoadStudentsForFood(foodId: widget.foodId, date: widget.date));
+    context.read<FoodAttendanceBloc>().add(
+      LoadStudentsForFood(foodId: widget.foodId, date: widget.date),
+    );
   }
 
   @override
@@ -29,7 +36,13 @@ class StudentListPageState extends State<StudentListPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.foodName),
-            Text(DateFormat('EEEE, d MMMM').format(widget.date), style: const TextStyle(fontSize: 12, color: Colors.white70)),
+            Text(
+              DateFormat('EEEE, d MMMM').format(widget.date),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+              ),
+            ),
           ],
         ),
       ),
@@ -39,7 +52,9 @@ class StudentListPageState extends State<StudentListPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.studentsForFood.isEmpty) {
-            return const Center(child: Text('No students have eaten this food today.'));
+            return const Center(
+              child: Text('No students have eaten this food today.'),
+            );
           }
 
           final students = state.studentsForFood;
@@ -52,17 +67,30 @@ class StudentListPageState extends State<StudentListPage> {
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue.shade100,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
                     child: Text(
                       student.name[0].toUpperCase(),
-                      style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  title: Text(
+                    student.name,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
                   subtitle: Text('Reg: ${student.reg}'),
                 ),
               );

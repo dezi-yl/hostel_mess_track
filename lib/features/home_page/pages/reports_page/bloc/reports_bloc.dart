@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:csv/csv.dart';
@@ -47,7 +46,9 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
             ..sort();
       final uniqueFoods = foods..sort((a, b) => a.name.compareTo(b.name));
       final maxFoodNameLength = uniqueFoods.fold<int>(
-          0, (max, food) => food.name.length > max ? food.name.length : max);
+        0,
+        (max, food) => food.name.length > max ? food.name.length : max,
+      );
 
       // 3. Create the header row
       final headers = [
@@ -92,8 +93,9 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
                 final attended = mealsOnDate.contains(food.id);
                 final paddedFoodName = food.name.padRight(maxFoodNameLength);
                 if (attended) {
-                  final record =
-                      mealsOnDateRecords.firstWhere((r) => r.foodId == food.id);
+                  final record = mealsOnDateRecords.firstWhere(
+                    (r) => r.foodId == food.id,
+                  );
                   final time = DateFormat('hh:mm a').format(record.date);
                   return '✅ $paddedFoodName $time';
                 } else {

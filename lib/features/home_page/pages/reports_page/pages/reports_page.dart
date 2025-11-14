@@ -1,10 +1,10 @@
+import 'package:hostel_mess_2/core/utils/snackbar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hostel_mess_2/features/home_page/pages/reports_page/bloc/reports_bloc.dart';
 import 'package:hostel_mess_2/features/home_page/pages/reports_page/bloc/reports_event.dart';
 import 'package:hostel_mess_2/features/home_page/pages/reports_page/bloc/reports_state.dart';
 import 'package:intl/intl.dart';
-
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});
@@ -27,13 +27,9 @@ class _ReportsPageState extends State<ReportsPage> {
     return BlocListener<ReportsBloc, ReportsState>(
       listener: (context, state) {
         if (state is ReportExported) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          SnackbarService.showSnackbar(context, state.message);
         } else if (state is ReportsError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          SnackbarService.showSnackbar(context, state.message, isError: true);
         }
       },
       child: Scaffold(
@@ -121,41 +117,48 @@ class _ReportsPageState extends State<ReportsPage> {
           defaultColumnWidth: const IntrinsicColumnWidth(),
           border: TableBorder(
             horizontalInside: BorderSide(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
               width: 1,
             ),
           ),
           children: [
             // Header row
             TableRow(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceVariant,
+              ),
               children: state.reportData.headers
-                  .map((header) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          header,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'monospace',
-                            fontFeatures: [FontFeature.tabularFigures()],
-                          ),
+                  .map(
+                    (header) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        header,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'monospace',
+                          fontFeatures: [FontFeature.tabularFigures()],
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
             // Data rows
             ...state.reportData.rows.map((row) {
               return TableRow(
                 children: row
-                    .map((cell) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            cell,
-                            style: const TextStyle(
-                              fontFamily: 'monospace',
-                              fontFeatures: [FontFeature.tabularFigures()],
-                            ),
+                    .map(
+                      (cell) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          cell,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontFeatures: [FontFeature.tabularFigures()],
                           ),
-                        ))
+                        ),
+                      ),
+                    )
                     .toList(),
               );
             }),

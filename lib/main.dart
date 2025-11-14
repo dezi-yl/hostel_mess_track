@@ -52,8 +52,37 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Hotel Mess',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: const NavBarScreen(), // ✅ NavBar with all 4 pages
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF0D47A1),
+            secondary: const Color(0xFF1976D2),
+            background: const Color(0xFFFEFEFE),
+            brightness: Brightness.light,
+          ),
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(
+              fontSize: 57.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF212121),
+            ),
+            bodyMedium: TextStyle(
+              fontSize: 14.0,
+              height: 1.4,
+              color: Color(0xFF212121),
+            ),
+          ),
+        ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF0D47A1),
+            secondary: const Color(0xFF1976D2),
+            background: const Color(0xFF121212),
+            brightness: Brightness.dark,
+          ),
+        ),
+        home: const NavBarScreen(),
       ),
     );
   }

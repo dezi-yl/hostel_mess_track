@@ -66,7 +66,11 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     Emitter<StudentState> emit,
   ) async {
     try {
-      await studentUseCases.addStudent(event.name, event.reg, roomId: event.roomId);
+      await studentUseCases.addStudent(
+        event.name,
+        event.reg,
+        roomId: event.roomId,
+      );
       add(const LoadStudentsEvent());
     } catch (e) {
       emit(StudentError('Failed to add student: ${e.toString()}'));
@@ -104,7 +108,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       }
 
       if (selectedIds.isEmpty) {
-        emit(currentState.copyWith(isSelectionMode: false, selectedStudentIds: []));
+        emit(
+          currentState.copyWith(isSelectionMode: false, selectedStudentIds: []),
+        );
       } else {
         emit(currentState.copyWith(selectedStudentIds: selectedIds));
       }
@@ -132,7 +138,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) {
     if (state is StudentLoaded) {
       final currentState = state as StudentLoaded;
-      final allStudentIds = currentState.filteredStudents.map((s) => s.id).toList();
+      final allStudentIds = currentState.filteredStudents
+          .map((s) => s.id)
+          .toList();
 
       if (currentState.selectedStudentIds.length == allStudentIds.length) {
         emit(currentState.copyWith(selectedStudentIds: []));

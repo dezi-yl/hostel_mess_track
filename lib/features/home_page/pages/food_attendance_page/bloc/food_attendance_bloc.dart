@@ -87,12 +87,17 @@ class FoodAttendanceBloc
         );
 
         final allRooms = await _useCases.getAllRooms();
-        final room = allRooms.firstWhere((r) => r.id == student.roomId, orElse: () => RoomEntity(id: -1, name: 'N/A'));
+        final room = allRooms.firstWhere(
+          (r) => r.id == student.roomId,
+          orElse: () => RoomEntity(id: -1, name: 'N/A'),
+        );
 
-        emit(state.copyWith(
-          successfullyAttendedStudent: student,
-          successfullyAttendedStudentRoom: room,
-        ));
+        emit(
+          state.copyWith(
+            successfullyAttendedStudent: student,
+            successfullyAttendedStudentRoom: room,
+          ),
+        );
         add(LoadFoodData()); // Refresh the main page data
       }
     } catch (e) {
@@ -168,9 +173,15 @@ class FoodAttendanceBloc
       add(LoadFoodData());
     } catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
-        emit(state.copyWith(errorMessage: 'Food item with this name already exists.'));
+        emit(
+          state.copyWith(
+            errorMessage: 'Food item with this name already exists.',
+          ),
+        );
       } else {
-        emit(state.copyWith(errorMessage: 'Failed to add food: ${e.toString()}'));
+        emit(
+          state.copyWith(errorMessage: 'Failed to add food: ${e.toString()}'),
+        );
       }
     }
   }
@@ -248,12 +259,17 @@ class FoodAttendanceBloc
         final allStudents = await _useCases.getAllStudents();
         final student = allStudents.firstWhere((s) => s.id == event.studentId);
         final allRooms = await _useCases.getAllRooms();
-        final room = allRooms.firstWhere((r) => r.id == student.roomId, orElse: () => RoomEntity(id: -1, name: 'N/A'));
+        final room = allRooms.firstWhere(
+          (r) => r.id == student.roomId,
+          orElse: () => RoomEntity(id: -1, name: 'N/A'),
+        );
 
-        emit(state.copyWith(
-          successfullyAttendedStudent: student,
-          successfullyAttendedStudentRoom: room,
-        ));
+        emit(
+          state.copyWith(
+            successfullyAttendedStudent: student,
+            successfullyAttendedStudentRoom: room,
+          ),
+        );
         add(LoadFoodData()); // Refresh the main page data
       }
     } catch (e) {

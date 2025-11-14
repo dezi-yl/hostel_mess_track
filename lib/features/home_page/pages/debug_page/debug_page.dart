@@ -51,33 +51,83 @@ class _DebugPageState extends State<DebugPage> {
             return ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                _buildSectionTitle('Students (${state.students.length})'),
-                ...state.students.map((s) => Text(s.name)),
-                _buildSectionTitle('Rooms (${state.rooms.length})'),
-                ...state.rooms.map((r) => Text(r.name)),
-                _buildSectionTitle('Foods (${state.foods.length})'),
-                ...state.foods.map((f) => Text(f.name)),
-                _buildSectionTitle('Records (${state.records.length})'),
-                ...foodWiseRecords.entries.map((entry) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          entry.key,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(
+                          'Students (${state.students.length})',
                         ),
-                      ),
-                      ...entry.value.map(
-                        (rec) => Text('${rec['studentName']} - ${rec['date']}'),
-                      ),
-                    ],
-                  );
-                }),
+                        ...state.students.map((s) => Text(s.name)),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle('Rooms (${state.rooms.length})'),
+                        ...state.rooms.map((r) => Text(r.name)),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle('Foods (${state.foods.length})'),
+                        ...state.foods.map((f) => Text(f.name)),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle('Records (${state.records.length})'),
+                        ...foodWiseRecords.entries.map((entry) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  entry.key,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              ...entry.value.map(
+                                (rec) => Text(
+                                  '${rec['studentName']} - ${rec['date']}',
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             );
           }
