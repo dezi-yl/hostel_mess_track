@@ -89,7 +89,7 @@ class _AttendanceDialogState extends State<AttendanceDialog>
     );
 
     // Resume scanning after a delay
-    Future.delayed(const Duration(seconds: 2), () {
+    await Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           _isProcessing = false;
@@ -124,6 +124,7 @@ class _AttendanceDialogState extends State<AttendanceDialog>
           );
         }
       },
+
       builder: (context, state) {
         return Dialog(
           shape: RoundedRectangleBorder(

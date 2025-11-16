@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:hostel_mess_2/core/domain/entities/room_entity.dart';
 import 'package:hostel_mess_2/core/domain/entities/student_entity.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'bloc/students_page_bloc.dart';
 import 'bloc/students_page_event.dart';
 import 'bloc/students_page_state.dart';
@@ -282,22 +283,57 @@ class StudentsPage extends StatelessWidget {
                 ToggleStudentSelectionEvent(student.id),
               );
             },
-            trailing: PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'update_room') {
-                  _showUpdateRoomDialog(context, student, state.rooms);
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'update_room',
-                  child: Text('Update Room'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.qr_code),
+                  onPressed: () => _showQrCodeDialog(context, student, room),
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'update_room') {
+                      _showUpdateRoomDialog(context, student, state.rooms);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'update_room',
+                      child: Text('Update Room'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  void _showQrCodeDialog(
+      BuildContext context, StudentEntity student, RoomEntity room) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            QrImageView(
+              data: student.reg,
+              version: QrVersions.auto,
+              size: 200.0,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              student.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text('Room: ${room.name}'),
+          ],
+        ),
+      ),
     );
   }
 
@@ -378,7 +414,6 @@ class StudentsPage extends StatelessWidget {
                     children: [
                       TextField(
                         controller: nameController,
-                        textCapitalization: TextCapitalization.words,
                         decoration: const InputDecoration(labelText: 'Name'),
                       ),
                       if (error != null) ...[
@@ -469,7 +504,10 @@ class StudentsPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              final name = nameController.text.trim();
+              final name = nameController.text.trim().split(' ').map((word) {
+                if (word.isEmpty) return '';
+                return word[0].toUpperCase() + word.substring(1).toLowerCase();
+              }).join(' ');
               final reg = regController.text.trim();
 
               nameErrorNotifier.value = null;

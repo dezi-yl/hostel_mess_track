@@ -134,7 +134,8 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
         ];
 
         String csv = const ListToCsvConverter().convert(csvData);
-        Uint8List bytes = utf8.encode(csv);
+        // Add BOM for better compatibility with Excel
+        Uint8List bytes = Uint8List.fromList(utf8.encode('\uFEFF$csv'));
 
         final selectedDate = DateTime.now();
         String fileName =
